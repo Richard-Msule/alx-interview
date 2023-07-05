@@ -1,17 +1,20 @@
 #!/usr/bin/python3
 
-"""
-Problem: You have n number of locked boxes in front of you.
-         Each box is numbered sequentially from 0 to n - 1
-         and each box may contain keys to the other boxes.
-Task: Write a method that determines if all the boxes can be opened.
-"""
-
-
 def canUnlockAll(boxes):
+    """
+    Function that determines if all the boxes can be opened.
+
+    Args:
+        boxes (list): A list of lists representing locked boxes.
+
+    Returns:
+        bool: True if all boxes can be opened, False otherwise.
+    """
+
     # Check if input is a list
     if type(boxes) is not list:
         return False
+
     # Check if the list is empty
     elif len(boxes) == 0:
         return False
@@ -36,4 +39,15 @@ def canUnlockAll(boxes):
 
     # If all keys are found for all indices, return True
     return True
+
+
+# Sample test cases
+boxes = [[1], [2], [3], [4], []]
+print(canUnlockAll(boxes))  # Output: True
+
+boxes = [[1, 4, 6], [2], [0, 4, 1], [5, 6, 2], [3], [4, 1], [6]]
+print(canUnlockAll(boxes))  # Output: True
+
+boxes = [[1, 4], [2], [0, 4, 1], [3], [], [4, 1], [5, 6]]
+print(canUnlockAll(boxes))  # Output: False
 

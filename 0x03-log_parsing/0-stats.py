@@ -1,41 +1,42 @@
-#!/usr/bin/python3
-"""stats module codes
-"""
-from sys import stdin
+#!/usr/bin/env python3
+import sys
 
+lines_processed = 0
+total_file_size = 0
+status_codes = {}
 
-codes = {'200': 0, '301': 0, '400': 0, '401': 0,
-         '403': 0, '404': 0, '405': 0, '500': 0}
-size = 0
+try:
+    for line in sys.stdin:
+        line = line.strip()
+        elements = line.split()
 
+        # Skip lines with incorrect format
+        if len(elements) != 9:
+            continue
 
-def print_info():
-    """print_info method print needed info
-    Args:
-        codes (dict): code status
-        size (int): size of files
-    """
-    print("File size: {}".format(size))
-    for key, val in sorted(codes.items()):
-        if val > 0:
-            print("{}: {}".format(key, val))
+        ip_address = elements[0]
+        status_code = elements[8]
+        file_size = int(elements[7])
 
+        # Update metrics
+        lines_processed += 1
+        total_file_size += file_size
+        status_codes[status_code] = status_codes.get(status_code, 0) + 1
 
-if __name__ == '__main__':
+        # Print statistics every 10 lines
+        if lines_processed % 10 == 0:
+            print(f"File size: {total_file_size}")
+            sorted_status_codes = sorted(status_codes.items(), key=lambda x: int(x[0]))
+            for code, count in sorted_status_codes:
+                print(f"{code}: {count}")
 
-    try:
-        for i, line in enumerate(stdin, 1):
-            try:
-                info = line.split()
-                size += int(info[-1])
-                if info[-2] in codes.keys():
-                    codes[info[-2]] += 1
-            except:
-                pass
-            
-            if not i % 10:
-                print_info()
-    except KeyboardInterrupt:
-        print_info()
-        raise
-    print_info()
+except KeyboardInterrupt:
+    # Handle Ctrl+C interruption
+    pass
+
+# Print final statistics
+print(f"File size: {total_file_size}")
+sorted_status_codes = sorted(status_codes.items(), key=lambda x: int(x[0]))
+for code, count in sorted_status_codes:
+    print(f"{code}: {count}")
+
